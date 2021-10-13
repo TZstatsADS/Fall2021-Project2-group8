@@ -10,34 +10,56 @@
 library(shiny)
 library(shinythemes)
 
-ui <- 
-    navbarPage("Demo", selected = "tab1", collapsible = TRUE, inverse = TRUE, theme = shinytheme("spacelab"),
-               tabPanel("1"),
-               tabPanel("2",
-                        fluidPage(
-                            tabsetPanel(
-                              sidebarLayout(
-                                sidebarPanel(
-                                  radioButtons(
-                                    inputId = "question1",
-                                    label = "Choose",
-                                    choices = c("a", 
-                                                "b", 
-                                                "c", 
-                                                "d",
-                                                "e")), br(),
-                                  radioButtons(
-                                    inputId = "group1",
-                                    label = "Choose",
-                                    choices = c("a", "b", "c")), br(),
-                                  radioButtons(
-                                    inputId = "plot1",
-                                    label = "Choose",
-                                    choices = c("a", "b", "c"))),
-                                mainPanel(plotOutput(outputId = "plot", height = "600px"))
-                                         ),
-                            ))),
-               tabPanel("3"), 
-               tabPanel("4"),
-               tabPanel("5")
-    )
+shinyUI(
+  navbarPage(("Demo"),
+      tabPanel("Introduction",
+               fluidRow(
+                 tags$h1("Introduction", style="font-weight:bold"),
+                 tags$h2(".......")
+               )),
+      tabPanel("Map",
+               sidebarPanel(
+                 selectInput("Type of crime",
+                             label = "Type of crime",
+                             choices = c('a', 'b', 'c')
+                             ),
+                 sliderInput("Date",
+                             label = "Date", 
+                             min = 0, 
+                             max = 100, 
+                             value = 50
+                             )
+               )),
+      tabPanel("Plots",
+               sidebarPanel(
+                 selectInput("NYC borough",
+                             label = "borough",
+                             choices = c('a', 'b', 'c')
+                 ),
+                 selectInput("Type of crime",
+                             label = "Type of crime",
+                             choices = c('a', 'b', 'c')
+                 ),
+               checkboxInput("lockdown", label = "lockdown", value = TRUE),  
+               checkboxInput("reopen", label = "reopen", value = FALSE)
+               )),
+        tabPanel("Plots",
+                 sidebarPanel(
+                   selectInput("Bias motivated",
+                               label = "bias",
+                               choices = c('a', 'b', 'c')
+                   ),
+                   selectInput("NYC borough",
+                               label = "borough",
+                               choices = c('a', 'b', 'c')
+                   ),
+                   selectInput("Seriousness",
+                               label = "seriouness",
+                               choices = c('a', 'b', 'c')
+                   ),
+                   checkboxInput("lockdown", label = "lockdown", value = TRUE),  
+                   checkboxInput("reopen", label = "reopen", value = FALSE)
+                 )
+                 ), 
+        tabPanel("Appendix"))
+)
