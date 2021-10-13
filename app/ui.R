@@ -1,74 +1,43 @@
+#
+# This is the user-interface definition of a Shiny web application. You can
+# run the application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    http://shiny.rstudio.com/
+#
 
-if (!require("shiny")) {
-  install.packages("shiny")
-  library(shiny)
-}
-if (!require("shinyWidgets")) {
-  install.packages("shinyWidgets")
-  library(shinyWidgets)
-}
-if (!require("shinythemes")) {
-  install.packages("shinythemes")
-  library(shinythemes)
-}
-if (!require("leaflet")) {
-  install.packages("leaflet")
-  library(leaflet)
-}
-if (!require("leaflet.extras")) {
-  install.packages("leaflet.extras")
-  library(leaflet.extras)
-}
+library(shiny)
+library(shinythemes)
 
-# Define UI for application that draws a histogram
-shinyUI(
-    navbarPage(strong("Citi Bike Study",style="color: white;"), 
-               theme=shinytheme("cerulean"), # select your themes https://rstudio.github.io/shinythemes/
-#------------------------------- tab panel - Maps ---------------------------------
-                tabPanel("Maps",
-                         icon = icon("map-marker-alt"), #choose the icon for
-                         div(class = 'outer',
-                        # side by side plots
-                        fluidRow(
-                                splitLayout(cellWidths = c("50%", "50%"), 
-                                             leafletOutput("left_map",width="100%",height=1200),
-                                             leafletOutput("right_map",width="100%",height=1200))),
-                        #control panel on the left
-                        absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
-                                      top = 200, left = 50, right = "auto", bottom = "auto", width = 250, height = "auto",
-                                      tags$h4('Citi Bike Activity Comparison'), 
-                                      tags$br(),
-                                      tags$h5('Pre-covid(Left) Right(Right)'), 
-                                      prettyRadioButtons(
-                                                      inputId = "adjust_score",
-                                                      label = "Score List:", 
-                                                      choices = c("start_cnt", 
-                                                                  "end_cnt", 
-                                                                  "day_diff_absolute",
-                                                                  "day_diff_percentage"),
-                                                      inline = TRUE, 
-                                                      status = "danger",
-                                                      fill = TRUE
-                                                        ),
-                                      awesomeRadio("adjust_time", 
-                                                   label="Time",
-                                                    choices =c("Overall",
-                                                               "Weekday", 
-                                                               "Weekend"), 
-                                                    selected = "Overall",
-                                                    status = "warning"),
-                                      # selectInput('adjust_weather',
-                                      #             label = 'Adjust for Weather',
-                                      #             choices = c('Yes','No'), 
-                                      #             selected = 'Yes'
-                                      #             ),
-                                      style = "opacity: 0.80"
-                                      
-                                ), #Panel Control - Closing
-                            ) #Maps - Div closing
-                        ) #tabPanel maps closing
-   
-
-
-    ) #navbarPage closing  
-) #Shiny UI closing    
+ui <- 
+    navbarPage("Demo", selected = "tab1", collapsible = TRUE, inverse = TRUE, theme = shinytheme("spacelab"),
+               tabPanel("1"),
+               tabPanel("2",
+                        fluidPage(
+                            tabsetPanel(
+                              sidebarLayout(
+                                sidebarPanel(
+                                  radioButtons(
+                                    inputId = "question1",
+                                    label = "Choose",
+                                    choices = c("a", 
+                                                "b", 
+                                                "c", 
+                                                "d",
+                                                "e")), br(),
+                                  radioButtons(
+                                    inputId = "group1",
+                                    label = "Choose",
+                                    choices = c("a", "b", "c")), br(),
+                                  radioButtons(
+                                    inputId = "plot1",
+                                    label = "Choose",
+                                    choices = c("a", "b", "c"))),
+                                mainPanel(plotOutput(outputId = "plot", height = "600px"))
+                                         ),
+                            ))),
+               tabPanel("3"), 
+               tabPanel("4"),
+               tabPanel("5")
+    )
