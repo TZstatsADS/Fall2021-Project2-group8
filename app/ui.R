@@ -9,6 +9,11 @@
 
 library(shiny)
 library(shinythemes)
+library(leaflet)
+
+
+
+# 02/29/2020 - 06/30/2021
 
 shinyUI(
   navbarPage(("Demo"),
@@ -18,17 +23,20 @@ shinyUI(
                  tags$h2(".......")
                )),
       tabPanel("Map",
+               leafletOutput("map", width="100%", height=620),
                sidebarPanel(
-                 selectInput("Type of crime",
-                             label = "Type of crime",
-                             choices = c('a', 'b', 'c')
-                             ),
-                 sliderInput("Date",
+                 # selectInput("Type of crime",
+                 #             label = "Type of crime",
+                 #             choices = c('a', 'b', 'c')
+                 #             ),
+                 selectInput("Date",
                              label = "Date", 
-                             min = 0, 
-                             max = 100, 
-                             value = 50
+                             choices = c('03/2020', '04/2020','05/2020','06/2020','07/2020','08/2020','09/2020','10/2020','11/2020','12/2020', '01/2021','02/2021','03/2021','04/2021', '05/2021','06/2021'),
                              )
+                 # selectInput("Month",
+                 #             label = "Month", 
+                 #             choices = c('a', 'b', 'c')
+                 # )
                )),
       tabPanel("Plots",
                sidebarPanel(
