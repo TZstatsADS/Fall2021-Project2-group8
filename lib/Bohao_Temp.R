@@ -47,6 +47,10 @@ shoot$date <- as_date(shoot$date, format = '%m/%d/%Y')
 # Select the rows from 2020-2-29 to 2021-6-30
 shoot <- shoot %>% filter(date <= as_date("2021-06-30")) %>%
   filter(date >= as_date("2020-02-29")) %>% arrange(date)
-rm(shoot.cur, shoot.his, shoot.his_raw, shoot.cur_raw)
+rm(shoot.cur, shoot.his, shoot.his_r aw, shoot.cur_raw)
 
+selectshoot <- function(df, month){
+  df$date <- substr(df$date, 4, 10)
+  df[df$date == month]
+}
 
