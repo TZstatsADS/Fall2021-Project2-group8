@@ -12,10 +12,17 @@ library(dplyr)
 library(lubridate)
 
 # Read the raw data
+<<<<<<< HEAD
 # covid_raw <- read.csv("./Fall2021-Project2-group8/data/cases-by-day.csv")
 shoot.his_raw <- read.csv("/Users/apple/Fall2021-Project2-group8/data/NYPD_Shooting_Incident_Data__Historic_.csv")
 shoot.cur_raw <- read.csv("/Users/apple/Fall2021-Project2-group8/data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
 ### Clean the Shooting crime data
+=======
+covid_raw <- read.csv("../data/cases-by-day.csv")
+shoot.his_raw <- read.csv("../data/NYPD_Shooting_Incident_Data__Historic_.csv")
+shoot.cur_raw <- read.csv("../data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
+sjh### Clean the Shooting crime data
+>>>>>>> 4058c93bd6ce17d3f1abffa1050c151f87f404bc
 # # Select the columns
 shoot.cur <- shoot.cur_raw %>%
     select(date = OCCUR_DATE, boro = BORO,
@@ -45,7 +52,11 @@ selectshoot <- function(df, month){
 ### 2020, MAR-June
 
 server <- function(input, output) {
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 4058c93bd6ce17d3f1abffa1050c151f87f404bc
     # pal <- colorFactor(c("navy", "red"))
     # NYC basemap
     output$map <- renderLeaflet({
@@ -56,10 +67,15 @@ server <- function(input, output) {
                 }"
             ) %>%
             addProviderTiles("CartoDB.Positron") %>%
+<<<<<<< HEAD
+=======
+            addTiles() %>%
+>>>>>>> 4058c93bd6ce17d3f1abffa1050c151f87f404bc
             setView(lng = -73.935242, lat = 40.730610, zoom = 10)
     })
     #
     #
+<<<<<<< HEAD
     df_react_shoot <- reactive({
         selectshoot(shoot, input$Date)
 
@@ -108,6 +124,24 @@ server <- function(input, output) {
         }
     }) 
 
+=======
+    
+    if (input$inputId == "03/2020") {
+        leafletProxy("map", data = selectshoot(shoot, "03/2020")) %>%
+            addCircleMarkers(
+                lng=~longitude,
+                lat=~latitude,
+                # radius = ~ifelse(type == "ship", 6, 10),
+                color = ~pal(type),
+                stroke = FALSE,
+                fillOpacity = 0.5
+            )
+        # addAwesomeMarkers(~longitude, ~latitude,
+        #                   icon=, label=~name, popup=~content)
+        
+    }
+    
+>>>>>>> 4058c93bd6ce17d3f1abffa1050c151f87f404bc
     # FilterPoints <- function(ds) {
     #     result <- shoot %>% dplyr::filter(borough == input$plot_borough)
     #     return(result)
@@ -119,7 +153,11 @@ server <- function(input, output) {
     # #   Playgrounds %>% dplyr::filter(borough == input$plot_borough)
     # #})
     #
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 4058c93bd6ce17d3f1abffa1050c151f87f404bc
     groupInput <- reactive({
         switch(input$group1,
                "a" = '',
@@ -136,12 +174,17 @@ server <- function(input, output) {
     })
     output$plot_access_web <- renderPlot({
         if (input$plot1 == "a") {
-
+            
         } else if (input$plot1 == "b") {
-
+            
         } else if (input$plot1 == "c") {
-
+            
         }
     })
+<<<<<<< HEAD
 
 }
+=======
+    
+}
+>>>>>>> 4058c93bd6ce17d3f1abffa1050c151f87f404bc

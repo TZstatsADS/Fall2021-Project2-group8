@@ -24,7 +24,7 @@ Term: Fall 2021
 	+ Bohao Ma
 	+ Jiayi Nie
 	+ Egem Yorulmaz
-	+ Quian Zhang
+	+ Qian Zhang
 
 + **Project summary**: While COVID caused an overall increase in crimes due to widespread food, housing and healthcare insecurity, it also brought a significant increase in hate crimes (notably towards Asian-Americans), with New York City reportedly experiencing a 223% increase in hate crimes in the first quarter of 2021 compared to the previous year. EndHate is a tool for businesses and individuals to learn more about the rise of hate crimes in NYC, and for them to ultimately develop a toolset for reporting such events, increasing citizen engagement. This will help protect citizens, businesses and larger communities.
 
