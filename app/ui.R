@@ -23,21 +23,49 @@ shinyUI(
                  tags$h2(".......")
                )),
       tabPanel("Map",
-               leafletOutput("map", width="100%", height=620),
                sidebarPanel(
-                 # selectInput("Type of crime",
-                 #             label = "Type of crime",
-                 #             choices = c('a', 'b', 'c')
-                 #             ),
+                 h1("Please select", 
+                    align = "left"),
                  selectInput("Date",
                              label = "Date", 
-                             choices = c('03/2020', '04/2020','05/2020','06/2020','07/2020','08/2020','09/2020','10/2020','11/2020','12/2020', '01/2021','02/2021','03/2021','04/2021', '05/2021','06/2021'),
-                             )
+                             choices = c('03/2020', '04/2020','05/2020','06/2020','07/2020','08/2020','09/2020','10/2020','11/2020','12/2020', '01/2021','02/2021','03/2021','04/2021', '05/2021','06/2021')
+                             ),
+                 h2("Please select", 
+                    align = "left"),
+                 checkboxInput("criminal_mischief", 
+                               label = "criminal mischief", value = FALSE),
+                 checkboxInput("grand_larceny", 
+                             label = "grand larceny", value = FALSE),
+                 checkboxInput("burglary", 
+                             label = "burglary", value = FALSE),
+                 checkboxInput("felony assault", 
+                             label = "felony assault", value = FALSE),
+                 checkboxInput("miscellaneous_penal_law", 
+                             label = "miscellaneous penal law", value = FALSE),
+                 checkboxInput("motor_vehicle", 
+                             label = "grand larceny of motor vehicle", value = FALSE),
+                 checkboxInput("robbery", 
+                             label = "robbery", value = FALSE),
+                 checkboxInput("dangerous_weapons", 
+                             label = "dangerous weapons", value = FALSE)
+                ),
+               mainPanel(leafletOutput("map", width="100%", height=620))
+               ),
+                 
+                 #"CRIMINAL MISCHIEF & RELATED OF"
+                 # "GRAND LARCENY"
+                 #  "BURGLARY"
+                 # "FELONY ASSAULT"
+                 # "MISCELLANEOUS PENAL LAW"
+                 # "GRAND LARCENY OF MOTOR VEHICLE"
+                 #  "ROBBERY"
+                 #  "DANGEROUS WEAPONS"
+                 
                  # selectInput("Month",
                  #             label = "Month", 
                  #             choices = c('a', 'b', 'c')
                  # )
-               )),
+              
       tabPanel("Plots",
                sidebarPanel(
                  selectInput("NYC borough",
@@ -48,7 +76,7 @@ shinyUI(
                              label = "Type of crime",
                              choices = c('a', 'b', 'c')
                  ),
-               checkboxInput("lockdown", label = "lockdown", value = TRUE),  
+               checkboxInput("lockdown", label = "lockdown", value = FALSE),  
                checkboxInput("reopen", label = "reopen", value = FALSE)
                )),
         tabPanel("Plots",
