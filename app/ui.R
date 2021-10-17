@@ -65,20 +65,26 @@ shinyUI(
                  #             choices = c('a', 'b', 'c')
                  # )
               
-      tabPanel("Plots",
+      tabPanel("COVID and Crimes",
                sidebarPanel(
-                 selectInput("NYC borough",
-                             label = "borough",
+                 selectInput("borough",
+                             label = "Borough",
                              choices = c('Manhattan', 'Bronx', 'Queens', 'Brooklyn', 'Staten Island')
                  ),
-                 selectInput("Type of crime",
+                 selectInput("crime",
                              label = "Type of crime",
-                             choices = c('criminal mischief', 'grand larceny', 'burglary', "felony assault", "miscellaneous penal law", "grand larceny of motor vehicle", "robbery", "dangerous_weapons")
+                             choices = tolower(c("CRIMINAL MISCHIEF & RELATED OF", "GRAND LARCENY", "BURGLARY",
+                                         "FELONY ASSAULT", "MISCELLANEOUS PENAL LAW",
+                                         "GRAND LARCENY OF MOTOR VEHICLE",
+                                         "ROBBERY", "DANGEROUS WEAPONS"))
                  )
                # checkboxInput("lockdown", label = "lockdown", value = FALSE),  
                # checkboxInput("reopen", label = "reopen", value = FALSE)
                ),
-               mainPanel()
+               mainPanel(
+                 plotOutput(outputId = "t3Plot1"),
+                 plotOutput(outputId = "t3Plot2")
+               )
                ),
       # [1] "ANTI-MALE HOMOSEXUAL (GAY)"        "ANTI-WHITE"                       
       # [3] "ANTI-MUSLIM"                       "ANTI-HISPANIC"                    
@@ -95,11 +101,11 @@ shinyUI(
         tabPanel("Plots",
                  sidebarPanel(
                    
-                   selectInput("NYC borough",
+                   selectInput("borough",
                                label = "borough",
                                choices = c('Manhattan', 'Bronx', 'Queens', 'Brooklyn', 'Staten Island')
                    ),
-                   selectInput("Bias motivated",
+                   selectInput("bias",
                                label = "bias",
                                choices = c('Anti-male homosexual (gay)', 
                                            "Anti-White", 'Anti-Muslim', 'Anti-Hispanic', 

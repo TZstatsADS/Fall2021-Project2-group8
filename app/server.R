@@ -1,12 +1,33 @@
+packages.used=c("shiny", "dplyr", "lubridate", "shinythemes", "leaflet")
+
+# check packages that need to be installed.
+packages.needed=setdiff(packages.used, 
+                        intersect(installed.packages()[,1], 
+                                  packages.used))
+# install additional packages
+if(length(packages.needed)>0){
+    install.packages(packages.needed, dependencies = TRUE)
+}
+
+# load packages
 library(shiny)
 library(dplyr)
 library(lubridate)
 
 # Read the raw data
-# covid_raw <- read.csv("./Fall2021-Project2-group8/data/cases-by-day.csv")
+covid_raw <- read.csv("../data/cases-by-day.csv")
+covid <- covid_raw %>% select(date = date_of_interest, case = CASE_COUNT,
+                                       bk = BK_CASE_COUNT, bx = BX_CASE_COUNT,
+                                       mn = MN_CASE_COUNT, qn = QN_CASE_COUNT,
+                                       si = SI_CASE_COUNT)
+# Select the rows from 2020-3-01 to 2021-6-30
+covid$date <- as_date(covid$date, format = '%m/%d/%Y')
+covid <- covid %>% filter(date >= as_date("2020-03-01"), 
+                          date <= as_date("2021-06-30"))
+rm(covid_raw)
 
-# shoot_his_raw <- read.csv("/Users/apple/Fall2021-Project2-group8/data/NYPD_Shooting_Incident_Data__Historic_.csv")
-# shoot_cur_raw <- read.csv("/Users/apple/Fall2021-Project2-group8/data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
+# shoot_his_raw <- read.csv("../data/NYPD_Shooting_Incident_Data__Historic_.csv")
+# shoot_cur_raw <- read.csv("../data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
 # 
 # names(shoot_cur_raw)[length(names(shoot_cur_raw))]<-"Lon_Lat"
 # shoot_his_raw$X_COORD_CD = as.character(shoot_his_raw$X_COORD_CD)
@@ -16,8 +37,8 @@ library(lubridate)
 # shoot = shoot[!(is.na(shoot$X_COORD_CD) &!is.na(shoot$Y_COORD_CD)),]
 # shoot = shoot %>% arrange(mdy(shoot$OCCUR_DATE))
 
-complaint_his_raw <- read.csv("/Users/apple/Fall2021-Project2-group8/data/NYPD_Complaint_Map__Historic_.csv")
-complaint_cur_raw <- read.csv("/Users/apple/Fall2021-Project2-group8/data/NYPD_Complaint_Map__Year_to_Date_.csv")
+complaint_his_raw <- read.csv("../data/NYPD_Complaint_Map__Historic_.csv")
+complaint_cur_raw <- read.csv("../data/NYPD_Complaint_Map__Year_to_Date_.csv")
 
 complaint = dplyr::bind_rows(complaint_his_raw, complaint_cur_raw)
 complaint = complaint[!(is.na(complaint$Latitude) &!is.na(complaint$Longitude)),]
@@ -42,8 +63,6 @@ complaint = complaint %>% arrange(mdy(complaint$CMPLNT_FR_DT))
 # }
 
 
-
-
 selectComplaint <- function(month, type){
     complaint[(substr(complaint$CMPLNT_FR_DT, 4, 10) == month & complaint$OFNS_DESC == type), ]
 }
@@ -54,6 +73,7 @@ selectComplaint <- function(month, type){
 
 server <- function(input, output) {
     
+    ################ Tab 2 Interactive Maps ###################
     # pal <- colorFactor(c("navy", "red"))
     # NYC basemap
     output$map <- renderLeaflet({
@@ -200,6 +220,70 @@ server <- function(input, output) {
         }
     }) 
     
+    ################## Tab 3 Crimes and COVID ##########################
+    TypeofCrime <- c("CRIMINAL MISCHIEF & RELATED OF", "GRAND LARCENY", "BURGLARY",
+                     "FELONY ASSAULT", "MISCELLANEOUS PENAL LAW",
+                     "GRAND LARCENY OF MOTOR VEHICLE",
+                     "ROBBERY", "DANGEROUS WEAPONS")
+    Borough <- c('Manhattan', 'Bronx', 'Queens', 'Brooklyn', 'Staten Island')
+    covid_data <- reactive({
+        if('Manhattan' %in% input$borough){
+            return(covid %>% select(date, case = mn)) 
+        }
+        if('Bronx' %in% input$borough){
+            return(covid %>% select(date, case = bx))
+        }
+        if('Queens' %in% input$borough){
+            return(covid %>% select(date, case = qn))
+        }
+        if('Brooklyn' %in% input$borough){
+            return(covid %>% select(date, case = bk))
+        }
+        if('Staten Island' %in% input$borough){
+            return(covid %>% select(date, case = si))
+        }
+    })
+    crime_data <- reactive({
+        for (i in 1:length(Borough)){
+            for(j in 1:length(TypeofCrime)){
+                if(input$borough %in% Borough[i] & input$crime %in% tolower(TypeofCrime[j])){
+                    temp <- complaint %>% filter(BORO_NM == toupper(Borough[i]),
+                                                 OFNS_DESC == TypeofCrime[j]) %>%
+                        group_by(CMPLNT_FR_DT) %>% count()
+                    temp$date <- as_date(temp$CMPLNT_FR_DT, format = '%m/%d/%Y')
+                    return(temp)
+                }
+            }
+        }
+    })
+    
+    output$t3Plot1 <- renderPlot({
+        # Kernel regression to get a smooth trend
+        smooth <- ksmooth(x = covid_data()$date,y = covid_data()$case, kernel = "normal",
+                          bandwidth = 5)
+        plot(x = covid_data()$date,y = covid_data()$case, xaxt = "n", lty = 1,
+        ylab = "daily confirmed cases", xlab = "",
+        main = paste("Number of confirmed cases in",  input$borough))
+        axis.Date(1, at=seq(min(covid_data()$date), max(covid_data()$date), by="months"), 
+                  format="%d-%m-%Y")
+        lines(smooth, col = "red", lwd = 2)
+        legend("topright", legend=c("Kernel regression"),
+               col=c("red"), lty=1, lwd=2)
+    })
+    output$t3Plot2 <- renderPlot({
+        # Kernel regression to smooth the plots
+        smooth <- ksmooth(x = crime_data()$date, y = crime_data()$n, kernel = "normal",
+                          bandwidth = 5)
+        plot(x = crime_data()$date, y = crime_data()$n,
+             ylab = "daily number of crimes", xlab = "",
+             main = paste("Number of", input$crime, "in",  input$borough))
+        axis.Date(1, at=seq(min(crime_data()$date), max(crime_data()$date), by="months"), 
+                  format="%d-%m-%Y")
+        lines(smooth, col = "red", lwd = 2)
+        legend("topright", legend=c("Kernel regression"),
+               col=c("red"), lty=1, lwd=2)
+    })
+    
     groupInput <- reactive({
         switch(input$group1,
                "a" = '', 
@@ -220,6 +304,8 @@ server <- function(input, output) {
                       "d" = '',
                       "e" = '')
     )})
+    
+    
  
 }
     
