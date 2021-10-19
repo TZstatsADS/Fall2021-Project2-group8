@@ -14,13 +14,12 @@ library(shiny)
 library(dplyr)
 library(lubridate)
 
-# Read the raw data
+# Process COVID Data
 covid_raw <- read.csv("../data/cases-by-day.csv")
 covid <- covid_raw %>% select(date = date_of_interest, case = CASE_COUNT,
                                        bk = BK_CASE_COUNT, bx = BX_CASE_COUNT,
                                        mn = MN_CASE_COUNT, qn = QN_CASE_COUNT,
                                        si = SI_CASE_COUNT)
-# Select the rows from 2020-3-01 to 2021-6-30
 covid$date <- as_date(covid$date, format = '%m/%d/%Y')
 covid <- covid %>% filter(date >= as_date("2020-03-01"), 
                           date <= as_date("2021-06-30"))
@@ -37,6 +36,7 @@ rm(covid_raw)
 # shoot = shoot[!(is.na(shoot$X_COORD_CD) &!is.na(shoot$Y_COORD_CD)),]
 # shoot = shoot %>% arrange(mdy(shoot$OCCUR_DATE))
 
+# Process Crime data
 complaint_his_raw <- read.csv("../data/NYPD_Complaint_Map__Historic_.csv")
 complaint_cur_raw <- read.csv("../data/NYPD_Complaint_Map__Year_to_Date_.csv")
 
@@ -44,6 +44,7 @@ complaint = dplyr::bind_rows(complaint_his_raw, complaint_cur_raw)
 complaint = complaint[!(is.na(complaint$Latitude) &!is.na(complaint$Longitude)),]
 complaint = complaint %>% arrange(mdy(complaint$CMPLNT_FR_DT))
 
+# Process hate crime data
 hatecrime_raw <- read.csv("../data/NYPD_Hate_Crimes.csv")
 hatecrime <- hatecrime_raw[!is.na(hatecrime_raw$Record.Create.Date), ]
 hatecrime$County <- gsub("RICHMOND", "STATEN ISLAND", hatecrime$County)
@@ -236,7 +237,7 @@ server <- function(input, output) {
                      "GRAND LARCENY OF MOTOR VEHICLE",
                      "ROBBERY", "DANGEROUS WEAPONS")
     Borough <- c('Manhattan', 'Bronx', 'Queens', 'Brooklyn', 'Staten Island')
-    covid_data <- reactive({
+    covid_data1 <- reactive({
         if('Manhattan' %in% input$borough){
             return(covid %>% select(date, case = mn)) 
         }
@@ -269,51 +270,31 @@ server <- function(input, output) {
     
     output$t3Plot1 <- renderPlot({
         # Kernel regression to get a smooth trend
-        smooth <- ksmooth(x = covid_data()$date,y = covid_data()$case, kernel = "normal",
-                          bandwidth = 5)
-        plot(x = covid_data()$date,y = covid_data()$case, xaxt = "n", lty = 1,
+        smooth <- ksmooth(x = covid_data1()$date,y = covid_data1()$case, kernel = "normal",
+                          bandwidth = 10)
+        plot(x = covid_data1()$date,y = covid_data1()$case, xaxt = "n", lty = 1,
         ylab = "daily confirmed cases", xlab = "",
         main = paste("Number of confirmed cases in",  input$borough))
-        axis.Date(1, at=seq(min(covid_data()$date), max(covid_data()$date), by="months"), 
-                  format="%d-%m-%Y")
+        axis.Date(1, at=seq(min(covid_data1()$date), max(covid_data1()$date), by="months"), 
+                  format="%m/%d/%Y")
         lines(smooth, col = "red", lwd = 2)
-        legend("topright", legend=c("Kernel regression"),
+        legend("topright", legend=c("Trend (Kernel regression)"),
                col=c("red"), lty=1, lwd=2)
     })
     output$t3Plot2 <- renderPlot({
         # Kernel regression to smooth the plots
         smooth <- ksmooth(x = crime_data()$date, y = crime_data()$n, kernel = "normal",
-                          bandwidth = 5)
-        plot(x = crime_data()$date, y = crime_data()$n,
+                          bandwidth = 10)
+        plot(x = crime_data()$date, y = crime_data()$n, xaxt = "n",
              ylab = "daily number of crimes", xlab = "",
              main = paste("Number of", input$crime, "in",  input$borough))
-        axis.Date(1, at=seq(min(crime_data()$date), max(crime_data()$date), by="months"), 
-                  format="%d-%m-%Y")
+        axis.Date(1, at=seq(as_date("2020-03-01"), as_date("2021-06-30"), by="months"), 
+                  format="%m/%d/%Y")
         lines(smooth, col = "red", lwd = 2)
-        legend("topright", legend=c("Kernel regression"),
+        legend("topright", legend=c("Trend (Kernel regression)"),
                col=c("red"), lty=1, lwd=2)
     })
-    
-    groupInput <- reactive({
-        switch(input$group1,
-               "a" = '', 
-               "b" = '', 
-               "a" = '',
-               "b" = '',
-               "c" = '')
-    })
-    dataInput <- reactive({
-        switch(input$question1, 
-               "a" = '', 
-               "b" = '', 
-               "c" = '', 
-               switch(input$question1,
-                      "a" = '',
-                      "b" = '',
-                      "c" = '',
-                      "d" = '',
-                      "e" = '')
-    )})
+
     
     #########TAB 4 HATE CRIMES AND COVID###############
     TypeofHate <- c("ANTI-JEWISH", "ANTI-ASIAN", "ANTI-MALE HOMOSEXUAL (GAY)",
@@ -375,14 +356,14 @@ server <- function(input, output) {
     output$t4Plot1 <- renderPlot({
       # Kernel regression to get a smooth trend
       smooth <- ksmooth(x = covid_data()$date,y = covid_data()$case, kernel = "normal",
-                        bandwidth = 5)
+                        bandwidth = 10)
       plot(x = covid_data()$date,y = covid_data()$case, xaxt = "n", lty = 1,
            ylab = "daily confirmed cases", xlab = "",
            main = paste("Number of confirmed cases in",  input$county))
       axis.Date(1, at=seq(min(covid_data()$date), max(covid_data()$date), by="months"), 
                 format="%d-%m-%Y")
       lines(smooth, col = "red", lwd = 2)
-      legend("topright", legend=c("Kernel regression"),
+      legend("topright", legend=c("Trend (Kernel regression)"),
              col=c("red"), lty=1, lwd=2)
     })
     
@@ -393,11 +374,11 @@ server <- function(input, output) {
       #print(hate_data()$date)
       plot(x = hate_data()$date, y = hate_data()$n, ylim=c(0,max(hate_data()$n)),
            #plot(x = temp2$date, y = temp2$n,
-           ylab = "daily number of hate crimes", xlab = "",
+           ylab = "daily number of hate crimes", xlab = "", xaxt = "n",
            main = paste("Number of", input$bias, "hate crimes in",  input$county))
       #axis.Date(1, at=seq(min(hate_data()$date), max(hate_data()$date), by="months"), 
       #format="%d-%m-%Y")
-      axis.Date(1, at=seq(min(covid_data()$date), max(covid_data()$date), by="months"), 
+      axis.Date(1, at=seq(as_date("2020-03-01"), as_date("2020-06-30"), by="months"), 
                 format="%d-%m-%Y")
       #lines(smooth, col = "red", lwd = 2)
       #legend("topright", legend=c("Kernel regression"),
