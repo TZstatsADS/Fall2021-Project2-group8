@@ -44,7 +44,17 @@ complaint = dplyr::bind_rows(complaint_his_raw, complaint_cur_raw)
 complaint = complaint[!(is.na(complaint$Latitude) &!is.na(complaint$Longitude)),]
 complaint = complaint %>% arrange(mdy(complaint$CMPLNT_FR_DT))
 
-
+hatecrime_raw <- read.csv("../data/NYPD_Hate_Crimes.csv")
+hatecrime <- hatecrime_raw[!is.na(hatecrime_raw$Record.Create.Date), ]
+hatecrime$County <- gsub("RICHMOND", "STATEN ISLAND", hatecrime$County)
+hatecrime$County <- gsub("KINGS", "BROOKLYN", hatecrime$County)
+hatecrime$County <- gsub("NEW YORK", "MANHATTAN", hatecrime$County)
+hatecrime <- hatecrime %>% mutate(date = Record.Create.Date,
+                                  bias = Bias.Motive.Description,
+                                  borough = County)
+hatecrime$date <- as_date(hatecrime$date, format = '%m/%d/%Y')
+hatecrime <- hatecrime %>% filter(date >= as_date("2020-03-01"), 
+                                  date <= as_date("2021-06-30"))
 
 # cat = unique(complaint$OFNS_DESC)
 # num = vector()
@@ -304,6 +314,95 @@ server <- function(input, output) {
                       "d" = '',
                       "e" = '')
     )})
+    
+    #########TAB 4 HATE CRIMES AND COVID###############
+    TypeofHate <- c("ANTI-JEWISH", "ANTI-ASIAN", "ANTI-MALE HOMOSEXUAL (GAY)",
+                    "ANTI-BLACK", "ANTI-WHITE",
+                    "ANTI-TRANSGENDER",
+                    "ANTI-MUSLIM", "ANTI-CATHOLIC", "ANTI-OTHER ETHNICITY", "ANTI-FEMALE",
+                    "ANTI-HISPANIC", "ANTI-LGBT (MIXED GROUP)", "ANTI-FEMALE HOMOSEXUAL (LESBIAN)",
+                    "ANTI-ARAB", "ANTI-GENDER NON-CONFORMING", "ANTI-MULTI-RACIAL GROUPS",
+                    "ANTI-OTHER RELIGION", "ANTI-BUDDHIST", "ANTI-HINDU", "ANTI-RELIGIOUS PRACTICE GENERALLY",
+                    "60 YEARS AND OLDER", "ANTI-JEHOVAHS WITNESS", "ANTI-PHYSICAL DISABILITY")
+    County <- c('BROOKLYN', 'MANHATTAN', 'QUEENS', 'BRONX', 'STATEN ISLAND')
+    
+    covid_data <- reactive({
+      if('Manhattan' %in% input$county){
+        return(covid %>% select(date, case = mn)) 
+      }
+      if('Bronx' %in% input$county){
+        return(covid %>% select(date, case = bx))
+      }
+      if('Queens' %in% input$county){
+        return(covid %>% select(date, case = qn))
+      }
+      if('Brooklyn' %in% input$county){
+        return(covid %>% select(date, case = bk))
+      }
+      if('Staten Island' %in% input$county){
+        return(covid %>% select(date, case = si))
+      }
+    })
+    
+    hate_data <- reactive({
+      for (x in 1:length(County)){
+        for(y in 1:length(TypeofHate)){
+          if(toupper(input$county) %in% County[x] & toupper(input$bias) %in% TypeofHate[y]){
+            
+            temp2 <- hatecrime %>% filter(borough == toupper(input$county),
+                                          bias == TypeofHate[y]) %>% group_by(date) %>% count()
+            
+            temp2$date <- as_date(temp2$date, format = '%m/%d/%Y')
+            
+            temp3 <- temp2
+            
+            # temp2$bymonth %>% 
+            #   group_by(month = lubridate::floor_date(temp2$date, "month")) %>%
+            #   summarize(summary_variable = sum(temp2$n))
+            
+            return(temp2)
+          }
+        }
+      }
+    })
+    
+    #    hate_data()$date %>% 
+    #      group_by(month = lubridate::floor_date(date, "month")) %>%
+    #      summarize(summary_variable = sum(value))
+    
+    #   View(hate_data()$date)
+    
+    output$t4Plot1 <- renderPlot({
+      # Kernel regression to get a smooth trend
+      smooth <- ksmooth(x = covid_data()$date,y = covid_data()$case, kernel = "normal",
+                        bandwidth = 5)
+      plot(x = covid_data()$date,y = covid_data()$case, xaxt = "n", lty = 1,
+           ylab = "daily confirmed cases", xlab = "",
+           main = paste("Number of confirmed cases in",  input$county))
+      axis.Date(1, at=seq(min(covid_data()$date), max(covid_data()$date), by="months"), 
+                format="%d-%m-%Y")
+      lines(smooth, col = "red", lwd = 2)
+      legend("topright", legend=c("Kernel regression"),
+             col=c("red"), lty=1, lwd=2)
+    })
+    
+    output$t4Plot2 <- renderPlot({
+      # Kernel regression to smooth the plots
+      #smooth <- ksmooth(x = hate_data()$date, y = hate_data()$n, kernel = "box",
+      #                  bandwidth = 5)
+      #print(hate_data()$date)
+      plot(x = hate_data()$date, y = hate_data()$n, ylim=c(0,max(hate_data()$n)),
+           #plot(x = temp2$date, y = temp2$n,
+           ylab = "daily number of hate crimes", xlab = "",
+           main = paste("Number of", input$bias, "hate crimes in",  input$county))
+      #axis.Date(1, at=seq(min(hate_data()$date), max(hate_data()$date), by="months"), 
+      #format="%d-%m-%Y")
+      axis.Date(1, at=seq(min(covid_data()$date), max(covid_data()$date), by="months"), 
+                format="%d-%m-%Y")
+      #lines(smooth, col = "red", lwd = 2)
+      #legend("topright", legend=c("Kernel regression"),
+      #       col=c("red"), lty=1, lwd=2)
+    })
     
     
  
