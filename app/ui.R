@@ -116,15 +116,8 @@ shinyUI(
                           ),
                           selectInput("bias",
                                       label = "bias",
-                                      choices = c('Anti-male homosexual (gay)', 
-                                                  "Anti-White", 'Anti-Muslim', 'Anti-Hispanic', 
-                                                  'Anti-transgender', 'Anti-Jewish', 'Anti-Asian', 
-                                                  'Anti-Black', 'Anti-female homosexual (lesbian)',
-                                                  'Anti-Arab', 'Anti-Catholic', 'Anti-gender non-conforming',
-                                                  'Anti-female', 'Anti-LGBT (mixed group)', 'Anti-multi-racial group',
-                                                  'Anti-other ethnicity', '60 yrs and older', 'Anti-Hindu', 
-                                                  'Anti-Buddhist', 'Anti-Jehovahs Witness', 'Anti-physical disability',
-                                                  'Anti-other religion', 'Anti-religious practice generally')
+                                      choices = c("ANTI-JEWISH", "ANTI-ASIAN", "ANTI-MALE HOMOSEXUAL (GAY)",
+                                                  "ANTI-BLACK", "ANTI-WHITE")
                           )
                         ),
                         mainPanel(

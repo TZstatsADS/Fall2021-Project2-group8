@@ -290,13 +290,7 @@ server <- function(input, output) {
     
     #########TAB 4 HATE CRIMES AND COVID###############
     TypeofHate <- c("ANTI-JEWISH", "ANTI-ASIAN", "ANTI-MALE HOMOSEXUAL (GAY)",
-                    "ANTI-BLACK", "ANTI-WHITE",
-                    "ANTI-TRANSGENDER",
-                    "ANTI-MUSLIM", "ANTI-CATHOLIC", "ANTI-OTHER ETHNICITY", "ANTI-FEMALE",
-                    "ANTI-HISPANIC", "ANTI-LGBT (MIXED GROUP)", "ANTI-FEMALE HOMOSEXUAL (LESBIAN)",
-                    "ANTI-ARAB", "ANTI-GENDER NON-CONFORMING", "ANTI-MULTI-RACIAL GROUPS",
-                    "ANTI-OTHER RELIGION", "ANTI-BUDDHIST", "ANTI-HINDU", "ANTI-RELIGIOUS PRACTICE GENERALLY",
-                    "60 YEARS AND OLDER", "ANTI-JEHOVAHS WITNESS", "ANTI-PHYSICAL DISABILITY")
+                    "ANTI-BLACK", "ANTI-WHITE")
     County <- c('BROOKLYN', 'MANHATTAN', 'QUEENS', 'BRONX', 'STATEN ISLAND')
     
     covid_data <- reactive({
