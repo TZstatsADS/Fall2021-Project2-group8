@@ -8,11 +8,13 @@
 Term: Fall 2021
 
 + Team #8
-+ **Projec title**: + Team members
++ **EndHate NYC**: + Team members
 	+ Bohao Ma
 	+ Egem Yorulmaz
 	+ Jiayi Nie
 	+ Qian Zhang
+
+Project Link: https://bohaoma.shinyapps.io/Project2_Group8/
 
 + **Project summary**: While COVID caused an overall increase in crimes due to widespread food, housing and healthcare insecurity, it also brought a significant increase in hate crimes (notably towards Asian-Americans), with New York City reportedly experiencing a 223% increase in hate crimes in the first quarter of 2021 compared to the previous year. EndHate is a tool for businesses and individuals to learn more about the rise of hate crimes in NYC, and for them to ultimately develop a toolset for reporting such events, increasing citizen engagement. This will help protect citizens, businesses and larger communities.
 
