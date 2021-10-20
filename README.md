@@ -2,7 +2,8 @@
 
 ### [Project Description](doc/project2_desc.md)
 
-![screenshot](doc/figs/map.jpg)
+![screenshot1](doc/figs/screenshot1.png)
+![screenshot2](doc/figs/screenshot2.png)
 ## COVID and Crimes in the NYC
 Term: Fall 2021
 
