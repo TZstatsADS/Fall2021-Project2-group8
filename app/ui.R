@@ -143,7 +143,7 @@ shinyUI(
                                         style = "padding: 8%; background-color: white",
                                         tags$h1("Appendix", style="color:#20bc9c;font-weight:bold"),
                                         tags$p("All data sources are from NYC Open Data. The data sources used can be found here.", style = "color;font-weight:bold"),
-                                        tags$p("Made with R Shiny. Packages used include dplyr, lubridate, shinythemes, leaflet.
+                                        tags$p("Made with R Shiny. Packages used include dplyr, lubridate, shinythemes, leaflet, tidyr.
 This project was created as part of Columbia University's STATGR5243 Applied Data Science course.", style = "color:#18bc9c;font-weight:bold"),
                                         tags$p("Authors: Bohao Ma (Department of Statistics, Columbia University), Egem Yorulmaz (Department of Applied Mathematics, Columbia University), Qian Zhang (Department of Statistics, Columbia University),
 Jiayi Nie (Columbia University).", style = "color:#18bc9c;font-weight:bold"),

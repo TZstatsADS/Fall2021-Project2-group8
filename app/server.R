@@ -1,4 +1,4 @@
-packages.used=c("shiny", "dplyr", "lubridate", "shinythemes", "leaflet")
+packages.used=c("shiny", "dplyr", "lubridate", "shinythemes", "leaflet", "tidyr")
 
 # check packages that need to be installed.
 packages.needed=setdiff(packages.used, 
@@ -13,6 +13,8 @@ if(length(packages.needed)>0){
 library(shiny)
 library(dplyr)
 library(lubridate)
+library(tidyr)
+
 
 # Process COVID Data
 covid_raw <- read.csv("./data/cases-by-day.csv")
@@ -36,6 +38,7 @@ complaint = complaint %>% arrange(mdy(complaint$CMPLNT_FR_DT))
 # Process hate crime data
 hatecrime_raw <- read.csv("./data/NYPD_Hate_Crimes.csv")
 hatecrime <- hatecrime_raw[!is.na(hatecrime_raw$Record.Create.Date), ]
+hatecrime %>% drop_na(Record.Create.Date)
 hatecrime$County <- gsub("RICHMOND", "STATEN ISLAND", hatecrime$County)
 hatecrime$County <- gsub("KINGS", "BROOKLYN", hatecrime$County)
 hatecrime$County <- gsub("NEW YORK", "MANHATTAN", hatecrime$County)
@@ -326,9 +329,6 @@ server <- function(input, output) {
             
             temp3 <- temp2
             
-            # temp2$bymonth %>% 
-            #   group_by(month = lubridate::floor_date(temp2$date, "month")) %>%
-            #   summarize(summary_variable = sum(temp2$n))
             
             return(temp2)
           }
