@@ -140,7 +140,7 @@ shinyUI(
 This project was created as part of Columbia University's STATGR5243 Applied Data Science course.", style = "color:#18bc9c;font-weight:bold"),
                                         tags$p("Authors: Bohao Ma (Department of Statistics, Columbia University), Egem Yorulmaz (Department of Applied Mathematics, Columbia University), Qian Zhang (Department of Statistics, Columbia University),
 Jiayi Nie (Columbia University).", style = "color:#18bc9c;font-weight:bold"),
-                                        tags$p("Github: See the code in our Github repository at https://github.com/TZstatsADS/Fall2021-Project2-group8", style = "color:#18bc9c;font-weight:bold")
+                                        tags$p("Github: See the code and data sources in our Github repository at https://github.com/TZstatsADS/Fall2021-Project2-group8", style = "color:#18bc9c;font-weight:bold")
                                       ),
                                       style = "opacity: 0.85")
                       ))
