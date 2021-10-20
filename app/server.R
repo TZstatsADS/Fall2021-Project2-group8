@@ -367,7 +367,7 @@ server <- function(input, output) {
            main = paste("Number of", input$bias, "hate crimes in",  input$county))
       #axis.Date(1, at=seq(min(hate_data()$date), max(hate_data()$date), by="months"), 
       #format="%d-%m-%Y")
-      axis.Date(1, at=seq(as_date("2020-03-01"), as_date("2020-06-30"), by="months"), 
+      axis.Date(1, at=seq(as_date("2020-03-01"), as_date("2021-06-30"), by="months"), 
                 format="%d-%m-%Y")
       #lines(smooth, col = "red", lwd = 2)
       #legend("topright", legend=c("Kernel regression"),
