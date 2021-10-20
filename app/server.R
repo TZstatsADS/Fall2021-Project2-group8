@@ -15,7 +15,7 @@ library(dplyr)
 library(lubridate)
 
 # Process COVID Data
-covid_raw <- read.csv("../data/cases-by-day.csv")
+covid_raw <- read.csv("./data/cases-by-day.csv")
 covid <- covid_raw %>% select(date = date_of_interest, case = CASE_COUNT,
                                        bk = BK_CASE_COUNT, bx = BX_CASE_COUNT,
                                        mn = MN_CASE_COUNT, qn = QN_CASE_COUNT,
@@ -26,15 +26,15 @@ covid <- covid %>% filter(date >= as_date("2020-03-01"),
 rm(covid_raw)
 
 # Process Crime data
-complaint_his_raw <- read.csv("../data/NYPD_Complaint_Map__Historic_.csv")
-complaint_cur_raw <- read.csv("../data/NYPD_Complaint_Map__Year_to_Date_.csv")
+complaint_his_raw <- read.csv("./data/NYPD_Complaint_Map__Historic_.csv")
+complaint_cur_raw <- read.csv("./data/NYPD_Complaint_Map__Year_to_Date_.csv")
 
 complaint = dplyr::bind_rows(complaint_his_raw, complaint_cur_raw)
 complaint = complaint[!(is.na(complaint$Latitude) &!is.na(complaint$Longitude)),]
 complaint = complaint %>% arrange(mdy(complaint$CMPLNT_FR_DT))
 
 # Process hate crime data
-hatecrime_raw <- read.csv("../data/NYPD_Hate_Crimes.csv")
+hatecrime_raw <- read.csv("./data/NYPD_Hate_Crimes.csv")
 hatecrime <- hatecrime_raw[!is.na(hatecrime_raw$Record.Create.Date), ]
 hatecrime$County <- gsub("RICHMOND", "STATEN ISLAND", hatecrime$County)
 hatecrime$County <- gsub("KINGS", "BROOKLYN", hatecrime$County)
