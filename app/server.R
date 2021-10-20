@@ -25,17 +25,6 @@ covid <- covid %>% filter(date >= as_date("2020-03-01"),
                           date <= as_date("2021-06-30"))
 rm(covid_raw)
 
-# shoot_his_raw <- read.csv("../data/NYPD_Shooting_Incident_Data__Historic_.csv")
-# shoot_cur_raw <- read.csv("../data/NYPD_Shooting_Incident_Data__Year_To_Date_.csv")
-# 
-# names(shoot_cur_raw)[length(names(shoot_cur_raw))]<-"Lon_Lat"
-# shoot_his_raw$X_COORD_CD = as.character(shoot_his_raw$X_COORD_CD)
-# shoot_his_raw$Y_COORD_CD = as.character(shoot_his_raw$Y_COORD_CD)
-# 
-# shoot = dplyr::bind_rows(shoot_his_raw, shoot_cur_raw)
-# shoot = shoot[!(is.na(shoot$X_COORD_CD) &!is.na(shoot$Y_COORD_CD)),]
-# shoot = shoot %>% arrange(mdy(shoot$OCCUR_DATE))
-
 # Process Crime data
 complaint_his_raw <- read.csv("../data/NYPD_Complaint_Map__Historic_.csv")
 complaint_cur_raw <- read.csv("../data/NYPD_Complaint_Map__Year_to_Date_.csv")
@@ -56,6 +45,7 @@ hatecrime <- hatecrime %>% mutate(date = Record.Create.Date,
 hatecrime$date <- as_date(hatecrime$date, format = '%m/%d/%Y')
 hatecrime <- hatecrime %>% filter(date >= as_date("2020-03-01"), 
                                   date <= as_date("2021-06-30"))
+
 
 # cat = unique(complaint$OFNS_DESC)
 # num = vector()
@@ -85,8 +75,7 @@ selectComplaint <- function(month, type){
 server <- function(input, output) {
     
     ################ Tab 2 Interactive Maps ###################
-    # pal <- colorFactor(c("navy", "red"))
-    # NYC basemap
+    # NYC map
     output$map <- renderLeaflet({
         leaflet(options = leafletOptions(zoomControl = FALSE)) %>%
             htmlwidgets::onRender(
@@ -139,7 +128,7 @@ server <- function(input, output) {
             fitBounds(-74.354598, 40.919500, -73.761545, 40.520024)
     
     
-        if (input$Date != '') {
+        if (input$Month != '') {
             if (input$criminal_mischief){
                 leafletProxy("map", data = df_react_cm()) %>%
                     addCircleMarkers(
