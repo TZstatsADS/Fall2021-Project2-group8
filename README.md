@@ -19,7 +19,7 @@ Term: Fall 2021
 	+ Bohao, Egem, Jiayi and Qian designed the study.
 	+ Bohao contributes to the Crime Map, COVID and Crimes, and Hate Crimes and COVID page in the App.
 	+ Egem contributes to the Home, COVID and Hate Crimes, and Appendix page in the App. Egem also presents our project.
-	+ Qian is the major contributor to the Crime Map in the App and to our ui.
+	+ Qian is the major contributor to the Crime Map in the App and to our UI.
 	+ Bohao, Egem, and Qian help each other in debugging.
 
 + **Data**: the data used in our project are as follows.
