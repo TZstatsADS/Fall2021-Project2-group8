@@ -19,7 +19,7 @@ covid_raw <- read.csv("./data/cases-by-day.csv")
 covid <- covid_raw %>% select(date = date_of_interest, case = CASE_COUNT,
                                        bk = BK_CASE_COUNT, bx = BX_CASE_COUNT,
                                        mn = MN_CASE_COUNT, qn = QN_CASE_COUNT,
-                                       si = SI_CASE_COUNT)
+                                       si = SI_CASE_COUNT) %>% na.omit()
 covid$date <- as_date(covid$date, format = '%m/%d/%Y')
 covid <- covid %>% filter(date >= as_date("2020-03-01"), 
                           date <= as_date("2021-06-30"))
