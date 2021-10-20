@@ -13,7 +13,7 @@ library(leaflet)
 
 
 shinyUI(
-  navbarPage(theme = shinytheme("darkly"), title=img(src="NoHate.jpeg", height = 30, width=45),
+  navbarPage(theme = shinytheme("darkly"), title=img(src="NoHate.jpeg", height = 30, width=45), id="nav", windowTitle = "Hate crime",
              tabPanel("Introduction",
                       fluidRow(
                         tags$img(src = "hate.jpeg", class = "background", height ="180%", width="100%", style = "opacity: 0.5"),
@@ -29,34 +29,34 @@ shinyUI(
                                       style = "opacity: 0.85")
                       )),
              tabPanel("Map",
-                      div(class="outer", 
+                      div(class="outer map",
                           leafletOutput("map", width="100%", height=620),
                           absolutePanel(id = "choices", class = "panel panel-default",
                                         top = 100, left = 25, width = 250, fixed=FALSE,
-                                        draggable = TRUE, height = "auto", color="white",
-                                        tags$h1("Please Select", 
+                                        draggable = TRUE, height = "auto",
+                                        tags$h1("Please Select",
                                            align = "left", style = "font-size:30px"),
                                         selectInput("Month",
-                                                    label = "Month", 
-                                                    choices = c('03/2020', '04/2020','05/2020','06/2020','07/2020','08/2020','09/2020','10/2020','11/2020','12/2020', '01/2021','02/2021','03/2021','04/2021', '05/2021','06/2021') 
+                                                    label = "Month",
+                                                    choices = c('03/2020', '04/2020','05/2020','06/2020','07/2020','08/2020','09/2020','10/2020','11/2020','12/2020', '01/2021','02/2021','03/2021','04/2021', '05/2021','06/2021')
                                         ),
-                                        tags$h2("Type of Crimes", 
+                                        tags$h2("Type of Crimes",
                                            align = "left",style = "font-size:15px"),
-                                        checkboxInput("criminal_mischief", 
+                                        checkboxInput("criminal_mischief",
                                                       label = "criminal mischief", value = FALSE),
-                                        checkboxInput("grand_larceny", 
+                                        checkboxInput("grand_larceny",
                                                       label = "grand larceny", value = FALSE),
-                                        checkboxInput("burglary", 
+                                        checkboxInput("burglary",
                                                       label = "burglary", value = FALSE),
-                                        checkboxInput("felony_assault", 
+                                        checkboxInput("felony_assault",
                                                       label = "felony assault", value = FALSE),
-                                        checkboxInput("miscellaneous_penal_law", 
+                                        checkboxInput("miscellaneous_penal_law",
                                                       label = "miscellaneous penal law", value = FALSE),
-                                        checkboxInput("motor_vehicle", 
+                                        checkboxInput("motor_vehicle",
                                                       label = "grand larceny of motor vehicle", value = FALSE),
-                                        checkboxInput("robbery", 
+                                        checkboxInput("robbery",
                                                       label = "robbery", value = FALSE),
-                                        checkboxInput("dangerous_weapons", 
+                                        checkboxInput("dangerous_weapons",
                                                       label = "dangerous weapons", value = FALSE),
                                         style = "opacity: 0.80")
                           )
@@ -149,6 +149,6 @@ Jiayi Nie (Columbia University).", style = "color:#18bc9c;font-weight:bold"),
                                         tags$p("Github: See the code in our Github repository at https://github.com/TZstatsADS/Fall2021-Project2-group8", style = "color:#18bc9c;font-weight:bold")
                                       ),
                                       style = "opacity: 0.85")
-                        ))
+                      ))
   )
 )

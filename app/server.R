@@ -89,35 +89,35 @@ server <- function(input, output) {
     #
     #
     df_react_cm <- reactive({
-        selectComplaint(input$Date,"CRIMINAL MISCHIEF & RELATED OF")
+        selectComplaint(input$Month,"CRIMINAL MISCHIEF & RELATED OF")
     })
     
     df_react_gl <- reactive({
-        selectComplaint(input$Date,"GRAND LARCENY")
+        selectComplaint(input$Month,"GRAND LARCENY")
     })
     
     df_react_bu <- reactive({
-        selectComplaint(input$Date,"BURGLARY")
+        selectComplaint(input$Month,"BURGLARY")
     })
     
     df_react_fa <- reactive({
-        selectComplaint(input$Date,"FELONY ASSAULT")
+        selectComplaint(input$Month,"FELONY ASSAULT")
     })
 
     df_react_mpl <- reactive({
-        selectComplaint(input$Date, "MISCELLANEOUS PENAL LAW")
+        selectComplaint(input$Month, "MISCELLANEOUS PENAL LAW")
     })
     
     df_react_glom <- reactive({
-        selectComplaint(input$Date, "GRAND LARCENY OF MOTOR VEHICLE")
+        selectComplaint(input$Month, "GRAND LARCENY OF MOTOR VEHICLE")
     })
     
     df_react_ro <- reactive({
-        selectComplaint(input$Date, "ROBBERY")
+        selectComplaint(input$Month, "ROBBERY")
     })
     
     df_react_dw <- reactive({
-        selectComplaint(input$Date, "DANGEROUS WEAPONS")
+        selectComplaint(input$Month, "DANGEROUS WEAPONS")
     })    
        
     observe({
@@ -126,7 +126,7 @@ server <- function(input, output) {
             clearMarkers() %>%
             addProviderTiles("CartoDB.Voyager") %>%
             fitBounds(-74.354598, 40.919500, -73.761545, 40.520024)
-    
+
     
         if (input$Month != '') {
             if (input$criminal_mischief){
